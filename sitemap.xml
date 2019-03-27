@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
     <url>
+      <loc>https://wushuangxiaoyu.github.io/blog/posts/hello-world/</loc>
+      
+      <lastmod>2019-03-25T18:51:14+08:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
       <loc>https://wushuangxiaoyu.github.io/blog/about/</loc>
       
       <lastmod>2014-04-09T00:00:00+00:00</lastmod>
@@ -14,6 +24,30 @@
   
     <url>
       <loc>https://wushuangxiaoyu.github.io/blog/categories/</loc>
+      
+      
+      
+      <priority>0</priority>
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://wushuangxiaoyu.github.io/blog/categories/hello-world/</loc>
+      
+      <lastmod>2019-03-25T18:51:14+08:00</lastmod>
+      
+      
+      
+      <priority>0</priority>
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://wushuangxiaoyu.github.io/blog/posts/</loc>
+      
+      <lastmod>2019-03-25T18:51:14+08:00</lastmod>
       
       
       
@@ -35,7 +69,7 @@
     <url>
       <loc>https://wushuangxiaoyu.github.io/blog/</loc>
       
-      <lastmod>2014-04-09T00:00:00+00:00</lastmod>
+      <lastmod>2019-03-25T18:51:14+08:00</lastmod>
       
       
       
