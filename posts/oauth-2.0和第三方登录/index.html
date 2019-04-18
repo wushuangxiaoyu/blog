@@ -11,7 +11,7 @@
   
   <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/hello-world/" />
   
-  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/oauth/" />
+  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/blog/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/blog/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/blog/favicon-16x16.png">
@@ -22,10 +22,10 @@
   <title>
        
        
-           Oauth | 木屐帽子
+           OAuth 2.0和第三方登录 | 木屐帽子
        
   </title>
-  <meta name="title" content="Oauth | 木屐帽子">
+  <meta name="title" content="OAuth 2.0和第三方登录 | 木屐帽子">
     
   
   <link rel="stylesheet" href="/blog/font/iconfont.css">
@@ -44,9 +44,9 @@
          "@id": "https://wushuangxiaoyu.github.io/blog/"
     },
     "articleSection" : "posts",
-    "name" : "Oauth",
-    "headline" : "Oauth",
-    "description" : "OAuth 2.0和第三方登录 一. 什么是OAuth2.0 &emsp;&emsp;OAuth是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。
+    "name" : "OAuth 2.0和第三方登录",
+    "headline" : "OAuth 2.0和第三方登录",
+    "description" : "一. 什么是OAuth2.0 &emsp;&emsp;OAuth是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。
 &emsp;&emsp;举个例子，你授权京东可以访问你微信的个人资料等信息，而无需提供京东你的微信密码。这可以最大限度地降低风险：如果京东遭遇破坏，你的微信密码仍然是安全的。
 &emsp;&emsp;OAuth不共享密码数据，而是使用授权令牌来证明消费者和服务提供商之间的身份。OAuth是一种身份验证协议，允许你代表你批准与另一个应用程序交互的应用程序，而不会泄露你的密码。
 二. OAuth应用场景  第三方登录授权服务（微信，FaceBook等都支持OAuth2.0） 与第三方应用的资源请求或交互 相同公司的不同应用信息共享（uid 相同,openid 不同）  三. OAuth2.0 流程 &emsp;&emsp;OAuth2.0有多种模式，这里只说明授权码模式，具体可参考OAuth 2.0 Grant Types
@@ -65,8 +65,8 @@
     "copyrightYear" : "2019",
     "datePublished": "2019-04-18 19:49:29 &#43;0800 CST",
     "dateModified" : "2019-04-18 19:49:29 &#43;0800 CST",
-    "url" : "https://wushuangxiaoyu.github.io/blog/posts/oauth/",
-    "wordCount" : "79",
+    "url" : "https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/",
+    "wordCount" : "77",
     "keywords" : [  "木屐帽子"]
 }
 </script>
@@ -129,7 +129,7 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Oauth</h1>
+        <h1 class="post-title" itemprop="name headline">OAuth 2.0和第三方登录</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="https://wushuangxiaoyu.github.io/blog/" rel="author">木屐帽子</a> with ♥ 
                 <span class="post-time">
@@ -163,8 +163,6 @@
 
           
 
-<h1 id="oauth-2-0和第三方登录">OAuth 2.0和第三方登录</h1>
-
 <h2 id="一-什么是oauth2-0">一. 什么是OAuth2.0</h2>
 
 <p>&emsp;&emsp;<a href="https://oauth.net/2/">OAuth</a>是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。</p>
@@ -193,7 +191,7 @@
 - 使用查询字符串中的授权代码将用户重定向回应用程序
 - 应用程序通过授权代码交换访问令牌</p>
 
-<p>&emsp;&emsp;&emsp;&emsp;<figure><img src="/images/ring.svg" data-sizes="auto" data-src="/bolg/images/oauth/OAuth_oauth_code.png" alt="" class="lazyload"><figcaption class="image-caption"></figcaption></figure></p>
+<p>&emsp;&emsp;&emsp;&emsp;<figure><img src="/images/ring.svg" data-sizes="auto" data-src="/blog/images/blog/oauth/OAuth_oauth_code.png" alt="" class="lazyload"><figcaption class="image-caption"></figcaption></figure></p>
 
 <h2 id="四-应用-第三方登录">四. 应用：第三方登录</h2>
 
@@ -201,7 +199,7 @@
 
 <p>&emsp;&emsp;了解了OAuth2.0的流程，第三方登录流程就很简单了，流程图如下所示：</p>
 
-<p>&emsp;&emsp;&emsp;&emsp;<figure><img src="/images/ring.svg" data-sizes="auto" data-src="/bolg/images/oauth/OAuth_oauth_login.png" alt="" class="lazyload"><figcaption class="image-caption"></figcaption></figure></p>
+<p>&emsp;&emsp;&emsp;&emsp;<figure><img src="/images/ring.svg" data-sizes="auto" data-src="/blog/images/blog/oauth/OAuth_oauth_login.png" alt="" class="lazyload"><figcaption class="image-caption"></figcaption></figure></p>
 
 <h3 id="遇到的问题">遇到的问题</h3>
 
@@ -233,7 +231,7 @@
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://wushuangxiaoyu.github.io/blog/posts/oauth/>https://wushuangxiaoyu.github.io/blog/posts/oauth/</span>
+                    <a href=https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/>https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/</span>
             </p>
             
              
