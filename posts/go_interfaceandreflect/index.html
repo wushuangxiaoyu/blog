@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en-ch">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="木屐帽子">
+  
+  
+  
+  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/hello-world/" />
+  <link rel="next" href="https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" />
+  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           【Go】interface{}和反射 | 木屐帽子
+       
+  </title>
+  <meta name="title" content="【Go】interface{}和反射 | 木屐帽子">
+    
+  
+  <link rel="stylesheet" href="/blog/font/iconfont.css">
+  <link rel="stylesheet" href="/blog/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/wushuangxiaoyu.github.io\/blog\/"
+    },
+    "articleSection" : "posts",
+    "name" : "【Go】interface{}和反射",
+    "headline" : "【Go】interface{}和反射",
+    "description" : "一. 引言 \x26emsp;\x26emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。\n二. 什么是反射 \x26emsp;\x26emsp;来看一下反射的定义：反射是一种能力，通过反射，程序可以在程序运行时动态的获取对象信息，分析类的能力以便于自我控制和调整。在我理解：反射机制最关键的地方在于，程序可以在运行状态的自审和探知🐶。\n三. Go的类型系统 \x26emsp;\x26emsp;既然反射机制很重要的一点就是运行时对类型的审查，那么在弄懂Go的反射机制之前，应该先了解Go的类型系统\n3.1面向对象？ \x26emsp;\x26emsp;在Is Go an object-oriented language?中有官方给出的回答如下：\n Yes and no. Although Go has types and methods and allows an object-oriented style of programming, there is no type hierarchy. The concept of “interface” in Go provides a different approach that we believe is easy to use and in some ways more general. There are also ways to embed types in other types to provide something analogous—but not identical—to subclassing.",
+    "inLanguage" : "en-ch",
+    "author" : "木屐帽子",
+    "creator" : "木屐帽子",
+    "publisher": "木屐帽子",
+    "accountablePerson" : "木屐帽子",
+    "copyrightHolder" : "木屐帽子",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-04-18 19:49:29 \x2b0800 CST",
+    "dateModified" : "2019-04-18 19:49:29 \x2b0800 CST",
+    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/go_interfaceandreflect\/",
+    "wordCount" : "361",
+    "keywords" : [ "Go", "木屐帽子"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wushuangxiaoyu.github.io/blog/">木屐帽子</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/blog/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/blog/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/blog/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/blog/about/" title="">About</a>
+                
+                <a class="menu-item" href="/blog/about/" title=""></a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wushuangxiaoyu.github.io/blog/">木屐帽子</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/blog/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/blog/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/blog/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/blog/about/" title="">About</a>
+                
+                <a class="menu-item" href="/blog/about/" title=""></a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">【Go】interface{}和反射</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://wushuangxiaoyu.github.io/blog/" rel="author">木屐帽子</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-04-18 itemprop="datePublished">April 18, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h2 id="一-引言">一. 引言</h2>
+
+<p>&emsp;&emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。</p>
+
+<h2 id="二-什么是反射">二. 什么是反射</h2>
+
+<p>&emsp;&emsp;来看一下反射的定义：反射是一种能力，通过反射，程序可以在程序运行时动态的获取对象信息，分析类的能力以便于自我控制和调整。在我理解：反射机制最关键的地方在于，程序可以在<strong>运行状态</strong>的自审和探知🐶。</p>
+
+<h2 id="三-go的类型系统">三. Go的类型系统</h2>
+
+<p>&emsp;&emsp;既然反射机制很重要的一点就是运行时对类型的审查，那么在弄懂Go的反射机制之前，应该先了解Go的类型系统</p>
+
+<h3 id="3-1面向对象">3.1面向对象？</h3>
+
+<p>&emsp;&emsp;在<a href="https://golang.google.cn/doc/faq#Is_Go_an_object-oriented_language">Is Go an object-oriented language?</a>中有官方给出的回答如下：</p>
+
+<blockquote>
+<p>Yes and no. Although Go has types and methods and allows an object-oriented style of programming, there is no type hierarchy. The concept of “interface” in Go provides a different approach that we believe is easy to use and in some ways more general. There are also ways to embed types in other types to provide something analogous—but not identical—to subclassing. Moreover, methods in Go are more general than in C++ or Java: they can be defined for any sort of data, even built-in types such as plain, “unboxed” integers. They are not restricted to structs (classes).
+Also, the lack of a type hierarchy makes “objects” in Go feel much more lightweight than in languages such as C++ or Java.</p>
+</blockquote>
+
+<p>&emsp;&emsp;可以看出，Go并不完全支持&rdquo;面向对象&rdquo;，比如Go中可以使用继承，但是却没有像C++或者Java那样清晰的层次结构。这会在实际编码过程中遇到很多的坑，最典型的就是并不能用父类型直接接收子类型对象：</p>
+
+<pre><code class="language-Go">type Person struct {
+	Name string
+}
+
+type Teacher struct {
+	Person
+}
+
+func PrintName(p Person){
+	fmt.Println(p.Name)
+}
+
+func main() {
+	t := Teacher{}
+	t.Name = &quot;aaa&quot;
+	PrintName(t)
+}
+</code></pre>
+
+<p>&emsp;&emsp;上面的代码是不能编译通过的，因为Go中并没有Java中的Is-A的概念！所以得使用interface{}来接收 或者 使用一个定义了PrintName()这个方法的接口去接收，而Person类和Teacher类都去实现PrintName()方法。</p>
+
+<h3 id="3-2-interface">3.2 interface{}</h3>
+
+<p>&emsp;&emsp;在使用interface{}的过程中，遇到了特别多的坑，并不能把interface{}单纯的和Java中的Object类类比。
+&emsp;&emsp;interface{}在Go中表示一个空的接口，Go中接口类型是一种抽象的类型。它不会暴露出它所代表的对象的内部值的结构和这个对象支持的基础操作的集合；它们只会表现出它们自己的方法。也就是说当你有看到一个接口类型的值时，你不知道它是什么，唯一知道的就是可以通过它的方法来做什么。<strong>如果一个类型实现了一个 interface 中所有方法，我们说类型实现了该 interface</strong>，<strong>所以所有类型都实现了它。它可以接收任何类型！</strong>
+&emsp;&emsp;interface在Go底层，被表示为一个值和值对应的类型的集合体。在Go语言中，变量总是被一个定义明确的值初始化，即使接口类型也不例外。对于一个接口的零值就是它的类型和值的部分都是nil:
+<figure><img src="/images/ring.svg" data-sizes="auto" data-src="/blog/images/blog/interface&amp;reflect/interface.png" alt="Image" class="lazyload"><figcaption class="image-caption">Image</figcaption></figure>
+&emsp;&emsp;一个interface{}类型的变量包含了2个指针，一个指针指向值的类型【对应concrete type】，另外一个指针指向实际的值【对应value】</p>
+
+<h2 id="四-reflect包">四.reflect包</h2>
+
+<h3 id="4-1-typeof-和-valueof">4.1 TypeOf 和 ValueOf</h3>
+
+<p>&emsp;&emsp;reflect.TypeOf 接受任意的 interface{} 类型, 并以reflect.Type形式返回其<strong>动态类型</strong>。</p>
+
+<pre><code class="language-go">t := reflect.TypeOf(3)  // a reflect.Type
+fmt.Println(t.String()) // &quot;int&quot;
+fmt.Println(t)          // &quot;int&quot;
+
+var w io.Writer = os.Stdout
+fmt.Println(reflect.TypeOf(w)) // &quot;*os.File&quot; 
+</code></pre>
+
+<p>&emsp;&emsp;当执行reflect.ValueOf(interface)之后，就得到了一个类型为”relfect.Value”变量，可以通过它本身的Interface()方法获得接口变量的真实内容，然后可以通过类型判断进行转换，转换为原有真实类型。</p>
+
+<h3 id="4-2-对value强制转换">4.2 对Value强制转换</h3>
+
+<pre><code class="language-Go">func main() {
+	var num float64 = 1.2345
+
+	pointer := reflect.ValueOf(&amp;num)
+	value := reflect.ValueOf(num)
+
+	// 可以理解为“强制转换”，但是需要注意的时候，转换的时候，如果转换的类型不完全符合，则直接panic
+	// Golang 对类型要求非常严格，类型一定要完全符合
+	// 如下两个，一个是*float64，一个是float64，如果弄混，则会panic
+	convertPointer := pointer.Interface().(*float64)
+	convertValue := value.Interface().(float64)
+
+	fmt.Println(convertPointer) //0xc42000e238
+	fmt.Println(convertValue)   //1.2345
+</code></pre>
+
+<h3 id="4-3-遍历field">4.3 遍历Field</h3>
+
+<pre><code class="language-Go">type User struct {
+	Name string
+	Age  int
+}
+
+func (this User) GetName() {
+	fmt.Println(this.Name)
+}
+
+func (this *User) GetAge() {
+	fmt.Println(this.Age)
+}
+
+func main() {
+	user := User{Name: &quot;老王&quot;, Age: 66}
+
+	TestFieldAndMethod(user)
+}
+
+func TestFieldAndMethod(ob interface{}) {
+	getType := reflect.TypeOf(ob)
+	fmt.Println(&quot;Type is :&quot;, getType.Name())
+
+	getValue := reflect.ValueOf(ob)
+	fmt.Println(&quot;Values is:&quot;, getValue)
+
+	for i := 0; i &lt; getType.NumField(); i++ {
+		field := getType.Field(i)
+		value := getValue.Field(i).Interface()
+		fmt.Printf(&quot;%s: %v = %v\n&quot;, field.Name, field.Type, value)
+	}
+	
+	for i := 0; i &lt; getType.NumMethod(); i++ {
+		m := getType.Method(i)
+		fmt.Printf(&quot;%s: %v\n&quot;, m.Name, m.Type)
+		m2 := getValue.Method(i)
+		args := make([]reflect.Value, 0)
+		//要通过反射来调用起对应的方法，必须要先通过reflect.ValueOf(interface)来获取到reflect.Value，得到“反射类型对象”后才能做下一步处理
+		m2.Call(args)
+	}
+}
+
+</code></pre>
+
+<p>###4.4 通过Value修改原来的值</p>
+
+<h2 id="五-性能问题">五.性能问题</h2>
+
+<p>&emsp;&emsp;Go的反射很慢，这个和它的api设计有关。</p>
+
+<pre><code class="language-Go"> type_ := reflect.ValueOf(obj)
+ fieldValue := type_.FieldByName(&quot;hello&quot;)
+</code></pre>
+
+<p>&emsp;&emsp;这里取出来的fielValue类型是reflect.Value，它是一个具体的值，而不是一个可复用的反射对象。这样每次反射都需要malloc这个reflect.Value结构体。
+&emsp;&emsp;在Go中基于反射的代码通常比正常的代码运行速度慢一到两个数量级。对于一个典型的项目，大部分函数的性能和程序的整体性能关系不大，所以当反射能使程序更加清晰的时候可以考虑使用。测试是一个特别适合使用反射的场景，因为每个测试的数据集都很小。但是对于性能关键路径的函数，最好避免使用反射。</p>
+
+<h2 id="六-参考文档">六.参考文档</h2>
+
+<ul>
+<li><a href="https://www.kancloud.cn/wizardforcel/gopl-zh">Go语言圣经</a></li>
+<li><a href="https://juejin.im/post/5a75a4fb5188257a82110544">Golang的反射reflect深入理解和示例</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>木屐帽子 </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wushuangxiaoyu.github.io/blog/tags/go/">
+                    #Go</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://wushuangxiaoyu.github.io/blog/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://wushuangxiaoyu.github.io/blog/posts/hello-world/" class="prev" rel="prev" title="hello-world"><i class="iconfont icon-left"></i>&nbsp;hello-world</a>
+         
+        
+        <a href="https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" class="next" rel="next" title="OAuth 2.0和第三方登录">OAuth 2.0和第三方登录&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://wushuangxiaoyu.github.io/blog/">木屐帽子</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/blog/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

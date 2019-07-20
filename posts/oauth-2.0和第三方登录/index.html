@@ -9,14 +9,14 @@
   
   
   
-  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/hello-world/" />
+  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" />
   
   <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/favicon-16x16.png">
-  <link rel="manifest" href="/blog/site.webmanifest">
-  <link rel="mask-icon" href="/blog/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
   <title>
@@ -41,21 +41,12 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https://wushuangxiaoyu.github.io/blog/"
+         "@id": "https:\/\/wushuangxiaoyu.github.io\/blog\/"
     },
     "articleSection" : "posts",
     "name" : "OAuth 2.0和第三方登录",
     "headline" : "OAuth 2.0和第三方登录",
-    "description" : "一. 什么是OAuth2.0 &emsp;&emsp;OAuth是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。
-&emsp;&emsp;举个例子，你授权京东可以访问你微信的个人资料等信息，而无需提供京东你的微信密码。这可以最大限度地降低风险：如果京东遭遇破坏，你的微信密码仍然是安全的。
-&emsp;&emsp;OAuth不共享密码数据，而是使用授权令牌来证明消费者和服务提供商之间的身份。OAuth是一种身份验证协议，允许你代表你批准与另一个应用程序交互的应用程序，而不会泄露你的密码。
-二. OAuth应用场景  第三方登录授权服务（微信，FaceBook等都支持OAuth2.0） 与第三方应用的资源请求或交互 相同公司的不同应用信息共享（uid 相同,openid 不同）  三. OAuth2.0 流程 &emsp;&emsp;OAuth2.0有多种模式，这里只说明授权码模式，具体可参考OAuth 2.0 Grant Types
-授权码模式 &emsp;&emsp;授权代码授权类型由Web和移动应用程序使用。它与大多数其他授权类型不同，首先要求应用程序启动浏览器以开始流程。在较高级别，流程包括以下步骤： - 应用程序打开浏览器或拉起应用以将用户发送到OAuth服务器 - 用户看到授权提示并批准应用程序的请求 - 使用查询字符串中的授权代码将用户重定向回应用程序 - 应用程序通过授权代码交换访问令牌
-&emsp;&emsp;&emsp;&emsp;四. 应用：第三方登录 基本流程 &emsp;&emsp;了解了OAuth2.0的流程，第三方登录流程就很简单了，流程图如下所示：
-&emsp;&emsp;&emsp;&emsp;遇到的问题 &emsp;&emsp;在 Facebook 的第三方登录提供的接口中，并没有看到获取code的方法，授权成功后就可以直接获取accessToken了
-&emsp;&emsp; 在stackoverflow看了一下，不只我一个遇到这个问题：Facebook login via Android SDK: Is it possible to get the “code” token without exchanging it for an access token?
-&emsp;&emsp;也许是因为fb依赖的自己的sdk，获取code的操作在内部已经自动完成了，这样应该也可以，或者说更安全一些？
-五. 参考文档  微信开放平台 权限参考文档 — Facebook 登录 OAuth 2.",
+    "description" : "一. 什么是OAuth2.0 \x26emsp;\x26emsp;OAuth是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。\n\x26emsp;\x26emsp;举个例子，你授权京东可以访问你微信的个人资料等信息，而无需提供京东你的微信密码。这可以最大限度地降低风险：如果京东遭遇破坏，你的微信密码仍然是安全的。\n\x26emsp;\x26emsp;OAuth不共享密码数据，而是使用授权令牌来证明消费者和服务提供商之间的身份。OAuth是一种身份验证协议，允许你代表你批准与另一个应用程序交互的应用程序，而不会泄露你的密码。\n二. OAuth应用场景  第三方登录授权服务（微信，FaceBook等都支持OAuth2.0） 与第三方应用的资源请求或交互 相同公司的不同应用信息共享（uid 相同,openid 不同）  三. OAuth2.0 流程 \x26emsp;\x26emsp;OAuth2.0有多种模式，这里只说明授权码模式，具体可参考OAuth 2.0 Grant Types\n授权码模式 \x26emsp;\x26emsp;授权代码授权类型由Web和移动应用程序使用。它与大多数其他授权类型不同，首先要求应用程序启动浏览器以开始流程。在较高级别，流程包括以下步骤： - 应用程序打开浏览器或拉起应用以将用户发送到OAuth服务器 - 用户看到授权提示并批准应用程序的请求 - 使用查询字符串中的授权代码将用户重定向回应用程序 - 应用程序通过授权代码交换访问令牌\n\x26emsp;\x26emsp;\x26emsp;\x26emsp;四. 应用：第三方登录 基本流程 \x26emsp;\x26emsp;了解了OAuth2.0的流程，第三方登录流程就很简单了，流程图如下所示：\n\x26emsp;\x26emsp;\x26emsp;\x26emsp;遇到的问题 \x26emsp;\x26emsp;在 Facebook 的第三方登录提供的接口中，并没有看到获取code的方法，授权成功后就可以直接获取accessToken了\n\x26emsp;\x26emsp; 在stackoverflow看了一下，不只我一个遇到这个问题：Facebook login via Android SDK: Is it possible to get the “code” token without exchanging it for an access token?\n\x26emsp;\x26emsp;也许是因为fb依赖的自己的sdk，获取code的操作在内部已经自动完成了，这样应该也可以，或者说更安全一些？\n五. 参考文档  微信开放平台 权限参考文档 — Facebook 登录 OAuth 2.",
     "inLanguage" : "en-ch",
     "author" : "木屐帽子",
     "creator" : "木屐帽子",
@@ -63,11 +54,11 @@
     "accountablePerson" : "木屐帽子",
     "copyrightHolder" : "木屐帽子",
     "copyrightYear" : "2019",
-    "datePublished": "2019-04-18 19:49:29 &#43;0800 CST",
-    "dateModified" : "2019-04-18 19:49:29 &#43;0800 CST",
-    "url" : "https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/",
+    "datePublished": "2019-04-18 19:49:29 \x2b0800 CST",
+    "dateModified" : "2019-04-18 19:49:29 \x2b0800 CST",
+    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95\/",
     "wordCount" : "77",
-    "keywords" : [  "木屐帽子"]
+    "keywords" : [ "后台开发", "木屐帽子"]
 }
 </script>
 
@@ -138,7 +129,7 @@
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/"> 后台开发 </a>
+                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
                         
                 </span>
         </div>
@@ -244,6 +235,14 @@
   
     <div class="post-tags">
         
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wushuangxiaoyu.github.io/blog/tags/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/">
+                    #后台开发</a></span>
+            
+            </section>
+        
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
                 <span><a href="https://wushuangxiaoyu.github.io/blog/">home</a></span>
@@ -252,7 +251,7 @@
 
     <div class="post-nav">
         
-        <a href="https://wushuangxiaoyu.github.io/blog/posts/hello-world/" class="prev" rel="prev" title="hello-world"><i class="iconfont icon-left"></i>&nbsp;hello-world</a>
+        <a href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" class="prev" rel="prev" title="【Go】interface{}和反射"><i class="iconfont icon-left"></i>&nbsp;【Go】interface{}和反射</a>
          
         
     </div>

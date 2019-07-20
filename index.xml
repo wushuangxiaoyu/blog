@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>木屐帽子 on 木屐帽子</title>
@@ -70,6 +69,168 @@
 &lt;li&gt;&lt;a href=&#34;https://developers.facebook.com/docs/facebook-login/permissions/v2.2?locale=zh_CN&#34;&gt;权限参考文档 — Facebook 登录&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://oauth.net/2/&#34;&gt;OAuth 2.0 — OAuth&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html&#34;&gt;理解OAuth 2.0 阮一峰&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>【Go】interface{}和反射</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</link>
+      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</guid>
+      <description>
+
+&lt;h2 id=&#34;一-引言&#34;&gt;一. 引言&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。&lt;/p&gt;
+
+&lt;h2 id=&#34;二-什么是反射&#34;&gt;二. 什么是反射&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;来看一下反射的定义：反射是一种能力，通过反射，程序可以在程序运行时动态的获取对象信息，分析类的能力以便于自我控制和调整。在我理解：反射机制最关键的地方在于，程序可以在&lt;strong&gt;运行状态&lt;/strong&gt;的自审和探知🐶。&lt;/p&gt;
+
+&lt;h2 id=&#34;三-go的类型系统&#34;&gt;三. Go的类型系统&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;既然反射机制很重要的一点就是运行时对类型的审查，那么在弄懂Go的反射机制之前，应该先了解Go的类型系统&lt;/p&gt;
+
+&lt;h3 id=&#34;3-1面向对象&#34;&gt;3.1面向对象？&lt;/h3&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;在&lt;a href=&#34;https://golang.google.cn/doc/faq#Is_Go_an_object-oriented_language&#34;&gt;Is Go an object-oriented language?&lt;/a&gt;中有官方给出的回答如下：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Yes and no. Although Go has types and methods and allows an object-oriented style of programming, there is no type hierarchy. The concept of “interface” in Go provides a different approach that we believe is easy to use and in some ways more general. There are also ways to embed types in other types to provide something analogous—but not identical—to subclassing. Moreover, methods in Go are more general than in C++ or Java: they can be defined for any sort of data, even built-in types such as plain, “unboxed” integers. They are not restricted to structs (classes).
+Also, the lack of a type hierarchy makes “objects” in Go feel much more lightweight than in languages such as C++ or Java.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;可以看出，Go并不完全支持&amp;rdquo;面向对象&amp;rdquo;，比如Go中可以使用继承，但是却没有像C++或者Java那样清晰的层次结构。这会在实际编码过程中遇到很多的坑，最典型的就是并不能用父类型直接接收子类型对象：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Go&#34;&gt;type Person struct {
+	Name string
+}
+
+type Teacher struct {
+	Person
+}
+
+func PrintName(p Person){
+	fmt.Println(p.Name)
+}
+
+func main() {
+	t := Teacher{}
+	t.Name = &amp;quot;aaa&amp;quot;
+	PrintName(t)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;上面的代码是不能编译通过的，因为Go中并没有Java中的Is-A的概念！所以得使用interface{}来接收 或者 使用一个定义了PrintName()这个方法的接口去接收，而Person类和Teacher类都去实现PrintName()方法。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-interface&#34;&gt;3.2 interface{}&lt;/h3&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;在使用interface{}的过程中，遇到了特别多的坑，并不能把interface{}单纯的和Java中的Object类类比。
+&amp;emsp;&amp;emsp;interface{}在Go中表示一个空的接口，Go中接口类型是一种抽象的类型。它不会暴露出它所代表的对象的内部值的结构和这个对象支持的基础操作的集合；它们只会表现出它们自己的方法。也就是说当你有看到一个接口类型的值时，你不知道它是什么，唯一知道的就是可以通过它的方法来做什么。&lt;strong&gt;如果一个类型实现了一个 interface 中所有方法，我们说类型实现了该 interface&lt;/strong&gt;，&lt;strong&gt;所以所有类型都实现了它。它可以接收任何类型！&lt;/strong&gt;
+&amp;emsp;&amp;emsp;interface在Go底层，被表示为一个值和值对应的类型的集合体。在Go语言中，变量总是被一个定义明确的值初始化，即使接口类型也不例外。对于一个接口的零值就是它的类型和值的部分都是nil:
+&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/interface&amp;amp;reflect/interface.png&#34; alt=&#34;Image&#34; /&gt;
+&amp;emsp;&amp;emsp;一个interface{}类型的变量包含了2个指针，一个指针指向值的类型【对应concrete type】，另外一个指针指向实际的值【对应value】&lt;/p&gt;
+
+&lt;h2 id=&#34;四-reflect包&#34;&gt;四.reflect包&lt;/h2&gt;
+
+&lt;h3 id=&#34;4-1-typeof-和-valueof&#34;&gt;4.1 TypeOf 和 ValueOf&lt;/h3&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;reflect.TypeOf 接受任意的 interface{} 类型, 并以reflect.Type形式返回其&lt;strong&gt;动态类型&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;t := reflect.TypeOf(3)  // a reflect.Type
+fmt.Println(t.String()) // &amp;quot;int&amp;quot;
+fmt.Println(t)          // &amp;quot;int&amp;quot;
+
+var w io.Writer = os.Stdout
+fmt.Println(reflect.TypeOf(w)) // &amp;quot;*os.File&amp;quot; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;当执行reflect.ValueOf(interface)之后，就得到了一个类型为”relfect.Value”变量，可以通过它本身的Interface()方法获得接口变量的真实内容，然后可以通过类型判断进行转换，转换为原有真实类型。&lt;/p&gt;
+
+&lt;h3 id=&#34;4-2-对value强制转换&#34;&gt;4.2 对Value强制转换&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Go&#34;&gt;func main() {
+	var num float64 = 1.2345
+
+	pointer := reflect.ValueOf(&amp;amp;num)
+	value := reflect.ValueOf(num)
+
+	// 可以理解为“强制转换”，但是需要注意的时候，转换的时候，如果转换的类型不完全符合，则直接panic
+	// Golang 对类型要求非常严格，类型一定要完全符合
+	// 如下两个，一个是*float64，一个是float64，如果弄混，则会panic
+	convertPointer := pointer.Interface().(*float64)
+	convertValue := value.Interface().(float64)
+
+	fmt.Println(convertPointer) //0xc42000e238
+	fmt.Println(convertValue)   //1.2345
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;4-3-遍历field&#34;&gt;4.3 遍历Field&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Go&#34;&gt;type User struct {
+	Name string
+	Age  int
+}
+
+func (this User) GetName() {
+	fmt.Println(this.Name)
+}
+
+func (this *User) GetAge() {
+	fmt.Println(this.Age)
+}
+
+func main() {
+	user := User{Name: &amp;quot;老王&amp;quot;, Age: 66}
+
+	TestFieldAndMethod(user)
+}
+
+func TestFieldAndMethod(ob interface{}) {
+	getType := reflect.TypeOf(ob)
+	fmt.Println(&amp;quot;Type is :&amp;quot;, getType.Name())
+
+	getValue := reflect.ValueOf(ob)
+	fmt.Println(&amp;quot;Values is:&amp;quot;, getValue)
+
+	for i := 0; i &amp;lt; getType.NumField(); i++ {
+		field := getType.Field(i)
+		value := getValue.Field(i).Interface()
+		fmt.Printf(&amp;quot;%s: %v = %v\n&amp;quot;, field.Name, field.Type, value)
+	}
+	
+	for i := 0; i &amp;lt; getType.NumMethod(); i++ {
+		m := getType.Method(i)
+		fmt.Printf(&amp;quot;%s: %v\n&amp;quot;, m.Name, m.Type)
+		m2 := getValue.Method(i)
+		args := make([]reflect.Value, 0)
+		//要通过反射来调用起对应的方法，必须要先通过reflect.ValueOf(interface)来获取到reflect.Value，得到“反射类型对象”后才能做下一步处理
+		m2.Call(args)
+	}
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;###4.4 通过Value修改原来的值&lt;/p&gt;
+
+&lt;h2 id=&#34;五-性能问题&#34;&gt;五.性能问题&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;Go的反射很慢，这个和它的api设计有关。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Go&#34;&gt; type_ := reflect.ValueOf(obj)
+ fieldValue := type_.FieldByName(&amp;quot;hello&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;这里取出来的fielValue类型是reflect.Value，它是一个具体的值，而不是一个可复用的反射对象。这样每次反射都需要malloc这个reflect.Value结构体。
+&amp;emsp;&amp;emsp;在Go中基于反射的代码通常比正常的代码运行速度慢一到两个数量级。对于一个典型的项目，大部分函数的性能和程序的整体性能关系不大，所以当反射能使程序更加清晰的时候可以考虑使用。测试是一个特别适合使用反射的场景，因为每个测试的数据集都很小。但是对于性能关键路径的函数，最好避免使用反射。&lt;/p&gt;
+
+&lt;h2 id=&#34;六-参考文档&#34;&gt;六.参考文档&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kancloud.cn/wizardforcel/gopl-zh&#34;&gt;Go语言圣经&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5a75a4fb5188257a82110544&#34;&gt;Golang的反射reflect深入理解和示例&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

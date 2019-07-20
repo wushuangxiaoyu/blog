@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on 木屐帽子</title>
+    <link>https://wushuangxiaoyu.github.io/blog/tags/go/</link>
+    <description>Recent content in Go on 木屐帽子</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-ch</language>
+    <lastBuildDate>Thu, 18 Apr 2019 19:49:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://wushuangxiaoyu.github.io/blog/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>【Go】interface{}和反射</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</link>
+      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</guid>
+      <description>一. 引言 &amp;emsp;&amp;emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。
+二. 什么是反射 &amp;emsp;&amp;emsp;来看一下反射的定义：反射是一种能力，通过反射，程序可以在程序运行时动态的获取对象信息，分析类的能力以便于自我控制和调整。在我理解：反射机制最关键的地方在于，程序可以在运行状态的自审和探知🐶。
+三. Go的类型系统 &amp;emsp;&amp;emsp;既然反射机制很重要的一点就是运行时对类型的审查，那么在弄懂Go的反射机制之前，应该先了解Go的类型系统
+3.1面向对象？ &amp;emsp;&amp;emsp;在Is Go an object-oriented language?中有官方给出的回答如下：
+ Yes and no. Although Go has types and methods and allows an object-oriented style of programming, there is no type hierarchy. The concept of “interface” in Go provides a different approach that we believe is easy to use and in some ways more general. There are also ways to embed types in other types to provide something analogous—but not identical—to subclassing.</description>
+    </item>
+    
+  </channel>
+</rss>
