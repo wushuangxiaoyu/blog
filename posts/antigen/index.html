@@ -9,9 +9,9 @@
   
   
   
+  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" />
   
-  <link rel="next" href="https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" />
-  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/hello-world/" />
+  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/antigen/" />
   <link rel="apple-touch-icon" sizes="180x180" href="blog/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="blog/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="blog/favicon-16x16.png">
@@ -22,10 +22,10 @@
   <title>
        
        
-           hello-world | 木屐帽子
+           Antigen:让zsh更好用 | 木屐帽子
        
   </title>
-  <meta name="title" content="hello-world | 木屐帽子">
+  <meta name="title" content="Antigen:让zsh更好用 | 木屐帽子">
     
   
   <link rel="stylesheet" href="/blog/font/iconfont.css">
@@ -44,9 +44,9 @@
          "@id": "https:\/\/wushuangxiaoyu.github.io\/blog\/"
     },
     "articleSection" : "posts",
-    "name" : "hello-world",
-    "headline" : "hello-world",
-    "description" : "hello world",
+    "name" : "Antigen:让zsh更好用",
+    "headline" : "Antigen:让zsh更好用",
+    "description" : "Antigen \x26emsp;\x26emsp;使用Antigen 让你的zsh更好用！\n配置： \x26emsp;\x26emsp;保存一下我的配置文件：\nantigen bundle git antigen bundle github antigen bundle git-flow #antigen bundle brew antigen bundle heroku antigen bundle pip antigen bundle lein antigen bundle iterm2 #antigen bundle man antigen bundle osx #antigen bundle command-not-found # Syntax highlighting bundle. antigen bundle zsh-users\/zsh-syntax-highlighting #antigen bundle zsh-users\/zsh-autosuggestions #antigen bundle zsh-users\/zsh-completions #antigen bundle soimort\/translate-shell # Load the theme. antigen theme robbyrussell # Tell Antigen that you\x27re done. antigen apply export ZSH=\x26quot;$HOME\/.",
     "inLanguage" : "en-ch",
     "author" : "木屐帽子",
     "creator" : "木屐帽子",
@@ -54,11 +54,11 @@
     "accountablePerson" : "木屐帽子",
     "copyrightHolder" : "木屐帽子",
     "copyrightYear" : "2019",
-    "datePublished": "2019-03-25 18:51:14 \x2b0800 CST",
-    "dateModified" : "2019-03-25 18:51:14 \x2b0800 CST",
-    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/hello-world\/",
-    "wordCount" : "2",
-    "keywords" : [  "木屐帽子"]
+    "datePublished": "2019-08-18 21:29:25 \x2b0800 CST",
+    "dateModified" : "2019-08-18 21:29:25 \x2b0800 CST",
+    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/antigen\/",
+    "wordCount" : "82",
+    "keywords" : [ "工具", "木屐帽子"]
 }
 </script>
 
@@ -120,16 +120,16 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">hello-world</h1>
+        <h1 class="post-title" itemprop="name headline">Antigen:让zsh更好用</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="https://wushuangxiaoyu.github.io/blog/" rel="author">木屐帽子</a> with ♥ 
                 <span class="post-time">
-                on <time datetime=2019-03-25 itemprop="datePublished">March 25, 2019</time>
+                on <time datetime=2019-08-18 itemprop="datePublished">August 18, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://wushuangxiaoyu.github.io/blog/categories/hello-world/"> hello-world </a>
+                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
                         
                 </span>
         </div>
@@ -150,7 +150,44 @@
           
           
 
-          <p>hello world</p>
+          
+
+<h1 id="antigen">Antigen</h1>
+
+<p>&emsp;&emsp;使用<a href="https://github.com/zsh-users/antigen">Antigen</a> 让你的zsh更好用！</p>
+
+<h1 id="配置">配置：</h1>
+
+<p>&emsp;&emsp;保存一下我的配置文件：</p>
+
+<pre><code class="language-Shell">antigen bundle git
+antigen bundle github
+antigen bundle git-flow
+#antigen bundle brew
+antigen bundle heroku
+antigen bundle pip
+antigen bundle lein
+antigen bundle iterm2
+#antigen bundle man
+antigen bundle osx
+#antigen bundle command-not-found
+
+# Syntax highlighting bundle.
+antigen bundle zsh-users/zsh-syntax-highlighting
+#antigen bundle zsh-users/zsh-autosuggestions
+#antigen bundle zsh-users/zsh-completions
+
+#antigen bundle soimort/translate-shell
+# Load the theme.
+antigen theme robbyrussell
+# Tell Antigen that you're done.
+antigen apply
+
+export ZSH=&quot;$HOME/.oh-my-zsh&quot;
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] &amp;&amp; . $(brew --prefix)/etc/profile.d/autojump.sh
+
+source ~/.bash_profile
+</code></pre>
 
     </div>
 
@@ -165,7 +202,7 @@
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://wushuangxiaoyu.github.io/blog/posts/hello-world/>https://wushuangxiaoyu.github.io/blog/posts/hello-world/</span>
+                    <a href=https://wushuangxiaoyu.github.io/blog/posts/antigen/>https://wushuangxiaoyu.github.io/blog/posts/antigen/</span>
             </p>
             
              
@@ -178,6 +215,14 @@
   
     <div class="post-tags">
         
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wushuangxiaoyu.github.io/blog/tags/%E5%B7%A5%E5%85%B7/">
+                    #工具</a></span>
+            
+            </section>
+        
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
                 <span><a href="https://wushuangxiaoyu.github.io/blog/">home</a></span>
@@ -185,9 +230,9 @@
     </div>
 
     <div class="post-nav">
-         
         
-        <a href="https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/" class="next" rel="next" title="OAuth 2.0和第三方登录">OAuth 2.0和第三方登录&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" class="prev" rel="prev" title="【Go】interface{}和反射"><i class="iconfont icon-left"></i>&nbsp;【Go】interface{}和反射</a>
+         
         
     </div>
 

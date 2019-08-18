@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具 on 木屐帽子</title>
+    <link>https://wushuangxiaoyu.github.io/blog/tags/%E5%B7%A5%E5%85%B7/</link>
+    <description>Recent content in 工具 on 木屐帽子</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-ch</language>
+    <lastBuildDate>Sun, 18 Aug 2019 21:29:25 +0800</lastBuildDate>
+    
+	<atom:link href="https://wushuangxiaoyu.github.io/blog/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Antigen:让zsh更好用</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/antigen/</link>
+      <pubDate>Sun, 18 Aug 2019 21:29:25 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/antigen/</guid>
+      <description>Antigen &amp;emsp;&amp;emsp;使用Antigen 让你的zsh更好用！
+配置： &amp;emsp;&amp;emsp;保存一下我的配置文件：
+antigen bundle git antigen bundle github antigen bundle git-flow #antigen bundle brew antigen bundle heroku antigen bundle pip antigen bundle lein antigen bundle iterm2 #antigen bundle man antigen bundle osx #antigen bundle command-not-found # Syntax highlighting bundle. antigen bundle zsh-users/zsh-syntax-highlighting #antigen bundle zsh-users/zsh-autosuggestions #antigen bundle zsh-users/zsh-completions #antigen bundle soimort/translate-shell # Load the theme. antigen theme robbyrussell # Tell Antigen that you&#39;re done. antigen apply export ZSH=&amp;quot;$HOME/.</description>
+    </item>
+    
+  </channel>
+</rss>

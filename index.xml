@@ -5,78 +5,60 @@
     <description>Recent content in 木屐帽子 on 木屐帽子</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ch</language>
-    <lastBuildDate>Thu, 18 Apr 2019 19:49:29 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 18 Aug 2019 21:29:25 +0800</lastBuildDate>
     <atom:link href="/blog/" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>OAuth 2.0和第三方登录</title>
-      <link>https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/</link>
-      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
+      <title>Antigen:让zsh更好用</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/antigen/</link>
+      <pubDate>Sun, 18 Aug 2019 21:29:25 +0800</pubDate>
       
-      <guid>https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/</guid>
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/antigen/</guid>
       <description>
 
-&lt;h2 id=&#34;一-什么是oauth2-0&#34;&gt;一. 什么是OAuth2.0&lt;/h2&gt;
+&lt;h1 id=&#34;antigen&#34;&gt;Antigen&lt;/h1&gt;
 
-&lt;p&gt;&amp;emsp;&amp;emsp;&lt;a href=&#34;https://oauth.net/2/&#34;&gt;OAuth&lt;/a&gt;是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。&lt;/p&gt;
+&lt;p&gt;&amp;emsp;&amp;emsp;使用&lt;a href=&#34;https://github.com/zsh-users/antigen&#34;&gt;Antigen&lt;/a&gt; 让你的zsh更好用！&lt;/p&gt;
 
-&lt;p&gt;&amp;emsp;&amp;emsp;举个例子，你授权京东可以访问你微信的个人资料等信息，而无需提供京东你的微信密码。这可以最大限度地降低风险：如果京东遭遇破坏，你的微信密码仍然是安全的。&lt;/p&gt;
+&lt;h1 id=&#34;配置&#34;&gt;配置：&lt;/h1&gt;
 
-&lt;p&gt;&amp;emsp;&amp;emsp;OAuth不共享密码数据，而是使用授权令牌来证明消费者和服务提供商之间的身份。OAuth是一种身份验证协议，允许你代表你批准与另一个应用程序交互的应用程序，而不会泄露你的密码。&lt;/p&gt;
+&lt;p&gt;&amp;emsp;&amp;emsp;保存一下我的配置文件：&lt;/p&gt;
 
-&lt;h2 id=&#34;二-oauth应用场景&#34;&gt;二. OAuth应用场景&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-Shell&#34;&gt;antigen bundle git
+antigen bundle github
+antigen bundle git-flow
+#antigen bundle brew
+antigen bundle heroku
+antigen bundle pip
+antigen bundle lein
+antigen bundle iterm2
+#antigen bundle man
+antigen bundle osx
+#antigen bundle command-not-found
 
-&lt;ul&gt;
-&lt;li&gt;第三方登录授权服务（微信，FaceBook等都支持OAuth2.0）&lt;/li&gt;
-&lt;li&gt;与第三方应用的资源请求或交互&lt;/li&gt;
-&lt;li&gt;相同公司的不同应用信息共享（uid 相同,openid 不同）&lt;/li&gt;
-&lt;/ul&gt;
+# Syntax highlighting bundle.
+antigen bundle zsh-users/zsh-syntax-highlighting
+#antigen bundle zsh-users/zsh-autosuggestions
+#antigen bundle zsh-users/zsh-completions
 
-&lt;h2 id=&#34;三-oauth2-0-流程&#34;&gt;三. OAuth2.0 流程&lt;/h2&gt;
+#antigen bundle soimort/translate-shell
+# Load the theme.
+antigen theme robbyrussell
+# Tell Antigen that you&#39;re done.
+antigen apply
 
-&lt;p&gt;&amp;emsp;&amp;emsp;OAuth2.0有多种模式，这里只说明授权码模式，具体可参考&lt;a href=&#34;https://oauth.net/2/grant-types/&#34;&gt;OAuth 2.0 Grant Types&lt;/a&gt;&lt;/p&gt;
+export ZSH=&amp;quot;$HOME/.oh-my-zsh&amp;quot;
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] &amp;amp;&amp;amp; . $(brew --prefix)/etc/profile.d/autojump.sh
 
-&lt;h3 id=&#34;授权码模式&#34;&gt;授权码模式&lt;/h3&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp;授权代码授权类型由Web和移动应用程序使用。它与大多数其他授权类型不同，首先要求应用程序启动浏览器以开始流程。在较高级别，流程包括以下步骤：
-- 应用程序打开浏览器或拉起应用以将用户发送到OAuth服务器
-- 用户看到授权提示并批准应用程序的请求
-- 使用查询字符串中的授权代码将用户重定向回应用程序
-- 应用程序通过授权代码交换访问令牌&lt;/p&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/oauth/OAuth_oauth_code.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;四-应用-第三方登录&#34;&gt;四. 应用：第三方登录&lt;/h2&gt;
-
-&lt;h3 id=&#34;基本流程&#34;&gt;基本流程&lt;/h3&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp;了解了OAuth2.0的流程，第三方登录流程就很简单了，流程图如下所示：&lt;/p&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/oauth/OAuth_oauth_login2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;遇到的问题&#34;&gt;遇到的问题&lt;/h3&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp;在 Facebook 的第三方登录提供的接口中，并没有看到获取code的方法，授权成功后就可以直接获取accessToken了&lt;/p&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp; 在stackoverflow看了一下，不只我一个遇到这个问题：&lt;a href=&#34;https://stackoverflow.com/questions/25185219/facebook-login-via-android-sdk-is-it-possible-to-get-the-code-token-without-e&#34;&gt;Facebook login via Android SDK: Is it possible to get the “code” token without exchanging it for an access token?&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&amp;emsp;&amp;emsp;也许是因为fb依赖的自己的sdk，获取code的操作在内部已经自动完成了，这样应该也可以，或者说更安全一些？&lt;/p&gt;
-
-&lt;h2 id=&#34;五-参考文档&#34;&gt;五. 参考文档&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;amp;t=resource/res_list&amp;amp;verify=1&amp;amp;id=open1419317851&amp;amp;token=&amp;amp;lang=zh_CN&#34;&gt;微信开放平台&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://developers.facebook.com/docs/facebook-login/permissions/v2.2?locale=zh_CN&#34;&gt;权限参考文档 — Facebook 登录&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://oauth.net/2/&#34;&gt;OAuth 2.0 — OAuth&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html&#34;&gt;理解OAuth 2.0 阮一峰&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+source ~/.bash_profile
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>【Go】interface{}和反射</title>
       <link>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</link>
-      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
+      <pubDate>Sun, 21 Jul 2019 21:32:21 +0800</pubDate>
       
       <guid>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</guid>
       <description>
@@ -231,6 +213,71 @@ func TestFieldAndMethod(ob interface{}) {
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.kancloud.cn/wizardforcel/gopl-zh&#34;&gt;Go语言圣经&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5a75a4fb5188257a82110544&#34;&gt;Golang的反射reflect深入理解和示例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>OAuth 2.0和第三方登录</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/</link>
+      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/oauth-2.0%E5%92%8C%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%BD%95/</guid>
+      <description>
+
+&lt;h2 id=&#34;一-什么是oauth2-0&#34;&gt;一. 什么是OAuth2.0&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;&lt;a href=&#34;https://oauth.net/2/&#34;&gt;OAuth&lt;/a&gt;是一种开放标准的授权协议或框架，为应用程序提供 “secure designated access” 的能力，在全世界得到广泛应用。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;举个例子，你授权京东可以访问你微信的个人资料等信息，而无需提供京东你的微信密码。这可以最大限度地降低风险：如果京东遭遇破坏，你的微信密码仍然是安全的。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;OAuth不共享密码数据，而是使用授权令牌来证明消费者和服务提供商之间的身份。OAuth是一种身份验证协议，允许你代表你批准与另一个应用程序交互的应用程序，而不会泄露你的密码。&lt;/p&gt;
+
+&lt;h2 id=&#34;二-oauth应用场景&#34;&gt;二. OAuth应用场景&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第三方登录授权服务（微信，FaceBook等都支持OAuth2.0）&lt;/li&gt;
+&lt;li&gt;与第三方应用的资源请求或交互&lt;/li&gt;
+&lt;li&gt;相同公司的不同应用信息共享（uid 相同,openid 不同）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;三-oauth2-0-流程&#34;&gt;三. OAuth2.0 流程&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;OAuth2.0有多种模式，这里只说明授权码模式，具体可参考&lt;a href=&#34;https://oauth.net/2/grant-types/&#34;&gt;OAuth 2.0 Grant Types&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;授权码模式&#34;&gt;授权码模式&lt;/h3&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;授权代码授权类型由Web和移动应用程序使用。它与大多数其他授权类型不同，首先要求应用程序启动浏览器以开始流程。在较高级别，流程包括以下步骤：
+- 应用程序打开浏览器或拉起应用以将用户发送到OAuth服务器
+- 用户看到授权提示并批准应用程序的请求
+- 使用查询字符串中的授权代码将用户重定向回应用程序
+- 应用程序通过授权代码交换访问令牌&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/oauth/OAuth_oauth_code.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;四-应用-第三方登录&#34;&gt;四. 应用：第三方登录&lt;/h2&gt;
+
+&lt;h3 id=&#34;基本流程&#34;&gt;基本流程&lt;/h3&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;了解了OAuth2.0的流程，第三方登录流程就很简单了，流程图如下所示：&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/oauth/OAuth_oauth_login2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;遇到的问题&#34;&gt;遇到的问题&lt;/h3&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;在 Facebook 的第三方登录提供的接口中，并没有看到获取code的方法，授权成功后就可以直接获取accessToken了&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp; 在stackoverflow看了一下，不只我一个遇到这个问题：&lt;a href=&#34;https://stackoverflow.com/questions/25185219/facebook-login-via-android-sdk-is-it-possible-to-get-the-code-token-without-e&#34;&gt;Facebook login via Android SDK: Is it possible to get the “code” token without exchanging it for an access token?&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;也许是因为fb依赖的自己的sdk，获取code的操作在内部已经自动完成了，这样应该也可以，或者说更安全一些？&lt;/p&gt;
+
+&lt;h2 id=&#34;五-参考文档&#34;&gt;五. 参考文档&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;amp;t=resource/res_list&amp;amp;verify=1&amp;amp;id=open1419317851&amp;amp;token=&amp;amp;lang=zh_CN&#34;&gt;微信开放平台&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developers.facebook.com/docs/facebook-login/permissions/v2.2?locale=zh_CN&#34;&gt;权限参考文档 — Facebook 登录&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://oauth.net/2/&#34;&gt;OAuth 2.0 — OAuth&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html&#34;&gt;理解OAuth 2.0 阮一峰&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

@@ -6,7 +6,7 @@
     <description>Recent content in Go on 木屐帽子</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ch</language>
-    <lastBuildDate>Thu, 18 Apr 2019 19:49:29 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 21 Jul 2019 21:32:21 +0800</lastBuildDate>
     
 	<atom:link href="https://wushuangxiaoyu.github.io/blog/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>【Go】interface{}和反射</title>
       <link>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</link>
-      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
+      <pubDate>Sun, 21 Jul 2019 21:32:21 +0800</pubDate>
       
       <guid>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</guid>
       <description>一. 引言 &amp;emsp;&amp;emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。

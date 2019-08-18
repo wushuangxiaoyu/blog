@@ -6,10 +6,34 @@
     <description>Recent content in Posts on 木屐帽子</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ch</language>
-    <lastBuildDate>Thu, 18 Apr 2019 19:49:29 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 18 Aug 2019 21:29:25 +0800</lastBuildDate>
     
 	<atom:link href="https://wushuangxiaoyu.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Antigen:让zsh更好用</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/antigen/</link>
+      <pubDate>Sun, 18 Aug 2019 21:29:25 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/antigen/</guid>
+      <description>Antigen &amp;emsp;&amp;emsp;使用Antigen 让你的zsh更好用！
+配置： &amp;emsp;&amp;emsp;保存一下我的配置文件：
+antigen bundle git antigen bundle github antigen bundle git-flow #antigen bundle brew antigen bundle heroku antigen bundle pip antigen bundle lein antigen bundle iterm2 #antigen bundle man antigen bundle osx #antigen bundle command-not-found # Syntax highlighting bundle. antigen bundle zsh-users/zsh-syntax-highlighting #antigen bundle zsh-users/zsh-autosuggestions #antigen bundle zsh-users/zsh-completions #antigen bundle soimort/translate-shell # Load the theme. antigen theme robbyrussell # Tell Antigen that you&#39;re done. antigen apply export ZSH=&amp;quot;$HOME/.</description>
+    </item>
+    
+    <item>
+      <title>【Go】interface{}和反射</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</link>
+      <pubDate>Sun, 21 Jul 2019 21:32:21 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</guid>
+      <description>一. 引言 &amp;emsp;&amp;emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。
+二. 什么是反射 &amp;emsp;&amp;emsp;来看一下反射的定义：反射是一种能力，通过反射，程序可以在程序运行时动态的获取对象信息，分析类的能力以便于自我控制和调整。在我理解：反射机制最关键的地方在于，程序可以在运行状态的自审和探知🐶。
+三. Go的类型系统 &amp;emsp;&amp;emsp;既然反射机制很重要的一点就是运行时对类型的审查，那么在弄懂Go的反射机制之前，应该先了解Go的类型系统
+3.1面向对象？ &amp;emsp;&amp;emsp;在Is Go an object-oriented language?中有官方给出的回答如下：
+ Yes and no. Although Go has types and methods and allows an object-oriented style of programming, there is no type hierarchy. The concept of “interface” in Go provides a different approach that we believe is easy to use and in some ways more general. There are also ways to embed types in other types to provide something analogous—but not identical—to subclassing.</description>
+    </item>
     
     <item>
       <title>OAuth 2.0和第三方登录</title>
@@ -27,19 +51,6 @@
 &amp;emsp;&amp;emsp; 在stackoverflow看了一下，不只我一个遇到这个问题：Facebook login via Android SDK: Is it possible to get the “code” token without exchanging it for an access token?
 &amp;emsp;&amp;emsp;也许是因为fb依赖的自己的sdk，获取code的操作在内部已经自动完成了，这样应该也可以，或者说更安全一些？
 五. 参考文档  微信开放平台 权限参考文档 — Facebook 登录 OAuth 2.</description>
-    </item>
-    
-    <item>
-      <title>【Go】interface{}和反射</title>
-      <link>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</link>
-      <pubDate>Thu, 18 Apr 2019 19:49:29 +0800</pubDate>
-      
-      <guid>https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/</guid>
-      <description>一. 引言 &amp;emsp;&amp;emsp;这几天在撸代码的时候，频繁用到了interface{}和反射，发现自己对Go reflect包还不是很熟悉，特地学习了一下Go反射的相关使用方法和机制，特梳理总结出来，方便日后回顾。
-二. 什么是反射 &amp;emsp;&amp;emsp;来看一下反射的定义：反射是一种能力，通过反射，程序可以在程序运行时动态的获取对象信息，分析类的能力以便于自我控制和调整。在我理解：反射机制最关键的地方在于，程序可以在运行状态的自审和探知🐶。
-三. Go的类型系统 &amp;emsp;&amp;emsp;既然反射机制很重要的一点就是运行时对类型的审查，那么在弄懂Go的反射机制之前，应该先了解Go的类型系统
-3.1面向对象？ &amp;emsp;&amp;emsp;在Is Go an object-oriented language?中有官方给出的回答如下：
- Yes and no. Although Go has types and methods and allows an object-oriented style of programming, there is no type hierarchy. The concept of “interface” in Go provides a different approach that we believe is easy to use and in some ways more general. There are also ways to embed types in other types to provide something analogous—but not identical—to subclassing.</description>
     </item>
     
     <item>
