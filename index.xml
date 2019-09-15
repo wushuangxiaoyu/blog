@@ -363,7 +363,7 @@ func TestFieldAndMethod(ob interface{}) {
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>https://wushuangxiaoyu.github.io/blog/about/</guid>
-      <description>&lt;p&gt;大学即将毕业，即将迎来新的人生旅途，趁着这两天没有工作，搭个自己的博客，记录一下自己的学习和思考，也算是给自己一些鼓励吧.&lt;/p&gt;
+      <description>&lt;p&gt;程序员一枚&lt;/p&gt;
 </description>
     </item>
     
