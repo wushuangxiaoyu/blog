@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" />
-  <link rel="next" href="https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/" />
-  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/antigen/" />
+  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/antigen/" />
+  
+  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/" />
   <link rel="apple-touch-icon" sizes="180x180" href="blog/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="blog/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="blog/favicon-16x16.png">
@@ -22,10 +22,10 @@
   <title>
        
        
-           Antigen:让zsh更好用 | 木屐帽子
+           HMAC-SHA1接口校验 | 木屐帽子
        
   </title>
-  <meta name="title" content="Antigen:让zsh更好用 | 木屐帽子">
+  <meta name="title" content="HMAC-SHA1接口校验 | 木屐帽子">
     
   
   <link rel="stylesheet" href="/blog/font/iconfont.css">
@@ -44,9 +44,9 @@
          "@id": "https:\/\/wushuangxiaoyu.github.io\/blog\/"
     },
     "articleSection" : "posts",
-    "name" : "Antigen:让zsh更好用",
-    "headline" : "Antigen:让zsh更好用",
-    "description" : "Antigen \x26emsp;\x26emsp;使用Antigen 让你的zsh更好用！\n配置： \x26emsp;\x26emsp;保存一下我的配置文件：\nantigen bundle git antigen bundle github antigen bundle git-flow #antigen bundle brew antigen bundle heroku antigen bundle pip antigen bundle lein antigen bundle iterm2 #antigen bundle man antigen bundle osx #antigen bundle command-not-found # Syntax highlighting bundle. antigen bundle zsh-users\/zsh-syntax-highlighting #antigen bundle zsh-users\/zsh-autosuggestions #antigen bundle zsh-users\/zsh-completions #antigen bundle soimort\/translate-shell # Load the theme. antigen theme robbyrussell # Tell Antigen that you\x27re done. antigen apply export ZSH=\x26quot;$HOME\/.",
+    "name" : "HMAC-SHA1接口校验",
+    "headline" : "HMAC-SHA1接口校验",
+    "description" : "引言 \x26emsp;\x26emsp;对于面向客户端的api接口，可以通过HMAC算法对Request生成摘要信息，请求时携带摘要信息，服务端进行校验的方式防止请求被篡改等中间攻击，也对防爬起到一定作用。\nHMAC-SHA1 \x26emsp;\x26emsp;HMAC是密钥相关的哈希运算消息认证码(Hash-based Message Authentication Code),HMAC运算利用哈希算法(HMAC-SHA1就是使用SHA1哈希算法)，以一个密钥和一个消息为输入，生产一个消息摘要作为输出。消息鉴别码实现鉴别的原理是: 用公开函数和密钥产生一个固定长度的值作为认证标识，用这个标识鉴别消息的完整性。使用一个密钥生成一个固定大小的小数据块，即MAC,并将其加入到消息中，然后传输。接收方利用与发送方共享的密钥进行鉴别认证等。\n摘要信息类似这样:\n\x26quot;Authorization: AWS \x26quot; \x2b AWSAccessKeyId \x2b \x26quot;:\x26quot; \x2b base64(hmac-sha1(VERB \x2b \x26quot;\\n\x26quot; \x2b CONTENT-MD5 \x2b \x26quot;\\n\x26quot; \x2b CONTENT-TYPE \x2b \x26quot;\\n\x26quot; \x2b DATE \x2b \x26quot;\\n\x26quot; \x2b CanonicalizedAmzHeaders \x2b \x26quot;\\n\x26quot; \x2b CanonicalizedResource))  \x26emsp;\x26emsp;我们可以自由规定需要散列的字段，比如时间戳，一些头信息，原子参数等\n\x26emsp;\x26emsp;代码实现如下(Go语言):\nfunc main() { accessSecret := \x26quot;dasas\x26quot; url := \x26quot;www.baidu.com\x26quot; request := http.Request{} \/\/ 需要签名的字段 stringToSign := request.Method \x2b \x26quot;\\n\x26quot; \x2b \x26quot;\\n\x26quot; \x2b request.Header.Get(\x26quot;Content-type\x26quot;) \x2b \x26quot;\\n\x26quot; \x2b url \x2b \x26quot;\\n\x26quot; signature := sha1base64(stringToSign, accessSecret) authorization := fmt.",
     "inLanguage" : "en-ch",
     "author" : "木屐帽子",
     "creator" : "木屐帽子",
@@ -54,11 +54,11 @@
     "accountablePerson" : "木屐帽子",
     "copyrightHolder" : "木屐帽子",
     "copyrightYear" : "2019",
-    "datePublished": "2019-08-18 21:29:25 \x2b0800 CST",
-    "dateModified" : "2019-08-18 21:29:25 \x2b0800 CST",
-    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/antigen\/",
-    "wordCount" : "82",
-    "keywords" : [ "工具", "木屐帽子"]
+    "datePublished": "2019-09-15 21:16:25 \x2b0800 CST",
+    "dateModified" : "2019-09-15 21:16:25 \x2b0800 CST",
+    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/hmac-sha1\/",
+    "wordCount" : "124",
+    "keywords" : [ "后台开发", "木屐帽子"]
 }
 </script>
 
@@ -120,16 +120,16 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Antigen:让zsh更好用</h1>
+        <h1 class="post-title" itemprop="name headline">HMAC-SHA1接口校验</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="https://wushuangxiaoyu.github.io/blog/" rel="author">木屐帽子</a> with ♥ 
                 <span class="post-time">
-                on <time datetime=2019-08-18 itemprop="datePublished">August 18, 2019</time>
+                on <time datetime=2019-09-15 itemprop="datePublished">September 15, 2019</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
                         
                 </span>
         </div>
@@ -152,42 +152,60 @@
 
           
 
-<h1 id="antigen">Antigen</h1>
+<h2 id="引言">引言</h2>
 
-<p>&emsp;&emsp;使用<a href="https://github.com/zsh-users/antigen">Antigen</a> 让你的zsh更好用！</p>
+<p>&emsp;&emsp;对于面向客户端的api接口，可以通过HMAC算法对Request生成摘要信息，请求时携带摘要信息，服务端进行校验的方式防止请求被篡改等中间攻击，也对防爬起到一定作用。</p>
 
-<h1 id="配置">配置：</h1>
+<h2 id="hmac-sha1">HMAC-SHA1</h2>
 
-<p>&emsp;&emsp;保存一下我的配置文件：</p>
+<p>&emsp;&emsp;HMAC是密钥相关的哈希运算消息认证码(Hash-based Message Authentication Code),HMAC运算利用哈希算法(HMAC-SHA1就是使用SHA1哈希算法)，以一个密钥和一个消息为输入，生产一个消息摘要作为输出。消息鉴别码实现鉴别的原理是:
+用公开函数和密钥产生一个固定长度的值作为认证标识，用这个标识鉴别消息的完整性。使用一个密钥生成一个固定大小的小数据块，即MAC,并将其加入到消息中，然后传输。接收方利用与发送方共享的密钥进行鉴别认证等。</p>
 
-<pre><code class="language-Shell">antigen bundle git
-antigen bundle github
-antigen bundle git-flow
-#antigen bundle brew
-antigen bundle heroku
-antigen bundle pip
-antigen bundle lein
-antigen bundle iterm2
-#antigen bundle man
-antigen bundle osx
-#antigen bundle command-not-found
+<p>摘要信息类似这样:</p>
 
-# Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
-#antigen bundle zsh-users/zsh-autosuggestions
-#antigen bundle zsh-users/zsh-completions
-
-#antigen bundle soimort/translate-shell
-# Load the theme.
-antigen theme robbyrussell
-# Tell Antigen that you're done.
-antigen apply
-
-export ZSH=&quot;$HOME/.oh-my-zsh&quot;
-[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] &amp;&amp; . $(brew --prefix)/etc/profile.d/autojump.sh
-
-source ~/.bash_profile
+<pre><code class="language-HTML">&quot;Authorization: AWS &quot; + AWSAccessKeyId + &quot;:&quot;  + base64(hmac-sha1(VERB + &quot;\n&quot;
+                   + CONTENT-MD5 + &quot;\n&quot;
+                   + CONTENT-TYPE + &quot;\n&quot;
+                   + DATE + &quot;\n&quot;
+                   + CanonicalizedAmzHeaders + &quot;\n&quot;
+                   + CanonicalizedResource))
 </code></pre>
+
+<p>&emsp;&emsp;我们可以自由规定需要散列的字段，比如时间戳，一些头信息，原子参数等</p>
+
+<p>&emsp;&emsp;代码实现如下(Go语言):</p>
+
+<pre><code class="language-GO">func main() {
+	accessSecret := &quot;dasas&quot;
+	url := &quot;www.baidu.com&quot;
+	request := http.Request{}
+	// 需要签名的字段
+	stringToSign := request.Method + &quot;\n&quot; +
+		&quot;\n&quot; +
+		request.Header.Get(&quot;Content-type&quot;) + &quot;\n&quot; +
+		url + &quot;\n&quot;
+	signature := sha1base64(stringToSign, accessSecret)
+	authorization := fmt.Sprintf(&quot;Authorization: AWS: %s&quot;, signature)
+	fmt.Println(authorization)
+}
+
+func sha1base64(strToSign string, secret string) string {
+	key := []byte(secret)
+	h := hmac.New(sha1.New, key)
+	h.Write([]byte(strToSign))
+	return string(base64.StdEncoding.EncodeToString(h.Sum(nil)))
+}
+</code></pre>
+
+<h2 id="问题">问题</h2>
+
+<p>&emsp;&emsp;HMAC-SHA1作为一种类似对称加密的方式，不可避免的需要在两端存储秘钥。相关讨论参见:<a href="https://stackoverflow.com/questions/5487757/using-hmac-sha1-for-api-authentication-how-to-store-the-client-password-secure">Using HMAC-SHA1 for API authentication - how to store the client password securely?</a></p>
+
+<h2 id="五-参考文档">五. 参考文档</h2>
+
+<ul>
+<li><a href="https://www.wolfe.id.au/2012/10/20/what-is-hmac-authentication-and-why-is-it-useful/">What is HMAC Authentication and why is it useful?</a></li>
+</ul>
 
     </div>
 
@@ -202,7 +220,7 @@ source ~/.bash_profile
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://wushuangxiaoyu.github.io/blog/posts/antigen/>https://wushuangxiaoyu.github.io/blog/posts/antigen/</span>
+                    <a href=https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/>https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/</span>
             </p>
             
              
@@ -218,8 +236,8 @@ source ~/.bash_profile
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://wushuangxiaoyu.github.io/blog/tags/%E5%B7%A5%E5%85%B7/">
-                    #工具</a></span>
+            <span class="tag"><a href="https://wushuangxiaoyu.github.io/blog/tags/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/">
+                    #后台开发</a></span>
             
             </section>
         
@@ -231,10 +249,8 @@ source ~/.bash_profile
 
     <div class="post-nav">
         
-        <a href="https://wushuangxiaoyu.github.io/blog/posts/go_interfaceandreflect/" class="prev" rel="prev" title="【Go】interface{}和反射"><i class="iconfont icon-left"></i>&nbsp;【Go】interface{}和反射</a>
+        <a href="https://wushuangxiaoyu.github.io/blog/posts/antigen/" class="prev" rel="prev" title="Antigen:让zsh更好用"><i class="iconfont icon-left"></i>&nbsp;Antigen:让zsh更好用</a>
          
-        
-        <a href="https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/" class="next" rel="next" title="HMAC-SHA1接口校验">HMAC-SHA1接口校验&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
