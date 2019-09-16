@@ -6,10 +6,26 @@
     <description>Recent content in Posts on 木屐帽子</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ch</language>
-    <lastBuildDate>Sun, 15 Sep 2019 21:16:25 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Sep 2019 20:42:36 +0800</lastBuildDate>
     
 	<atom:link href="https://wushuangxiaoyu.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>进程，线程在内存中的结构</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/process_memory/</link>
+      <pubDate>Mon, 16 Sep 2019 20:42:36 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/process_memory/</guid>
+      <description>进程 &amp;emsp;&amp;emsp;进程是操作系统对一个正在运行的程序的抽象，它是资源分配的最小单位。
+&amp;emsp;&amp;emsp;那么进程的内存结构和内存布局是啥样的呢？
+虚拟地址 &amp;emsp;&amp;emsp;在x86_64下面，其实虚拟地址只使用了48位。所以显示的地址都是只有12位16进制。48位地址长度也就是对应了256TB的地址空间。
+&amp;emsp;&amp;emsp;而在Linux下有效的地址区间是从 0x00000000 00000000 ~ 0x00007FFF FFFFFFFF 还有 0xFFFF8000 00000000 ~ 0xFFFFFFFF FFFFFFFF 两个地址区间。而每个地址区间都有128TB的地址空间可以使用，所以总共是256TB的可用空间。地址空间的划分如下所示
+ffffffff`ffffffff _____________ | | | 内核空间 | ffff8000`00000000 |____________| | | | | | 向上增长 | | /|\ | 00007fff`ffffffff |______|_____| | | | 用户空间 | 00000000`00000000 |____________|  内存布局 &amp;emsp;&amp;emsp;在linux中可以通过如命令查看某一进程的内存布局：
+cat /proc/&amp;lt;pid&amp;gt;/maps pmap &amp;lt;pid&amp;gt; -X  &amp;emsp;&amp;emsp;mac查看内存布局参考如何快速读取Mac进程的内存映射
+&amp;emsp;&amp;emsp;以Linux中的一个JVM进程为例 cat /proc//map 查看其内存布局：
+00400000-00401000 r-xp 00000000 fd:00 30540205 /a8root/work/soft/jdk1.8.0_121/bin/java 00600000-00601000 rw-p 00000000 fd:00 30540205 /a8root/work/soft/jdk1.</description>
+    </item>
     
     <item>
       <title>HMAC-SHA1接口校验</title>

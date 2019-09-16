@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-ch">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="木屐帽子">
+  
+  
+  
+  <link rel="prev" href="https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/" />
+  
+  <link rel="canonical" href="https://wushuangxiaoyu.github.io/blog/posts/process_memory/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="blog/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="blog/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="blog/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           进程，线程在内存中的结构 | 木屐帽子
+       
+  </title>
+  <meta name="title" content="进程，线程在内存中的结构 | 木屐帽子">
+    
+  
+  <link rel="stylesheet" href="/blog/font/iconfont.css">
+  <link rel="stylesheet" href="/blog/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/wushuangxiaoyu.github.io\/blog\/"
+    },
+    "articleSection" : "posts",
+    "name" : "进程，线程在内存中的结构",
+    "headline" : "进程，线程在内存中的结构",
+    "description" : "进程 \x26emsp;\x26emsp;进程是操作系统对一个正在运行的程序的抽象，它是资源分配的最小单位。\n\x26emsp;\x26emsp;那么进程的内存结构和内存布局是啥样的呢？\n虚拟地址 \x26emsp;\x26emsp;在x86_64下面，其实虚拟地址只使用了48位。所以显示的地址都是只有12位16进制。48位地址长度也就是对应了256TB的地址空间。\n\x26emsp;\x26emsp;而在Linux下有效的地址区间是从 0x00000000 00000000 ~ 0x00007FFF FFFFFFFF 还有 0xFFFF8000 00000000 ~ 0xFFFFFFFF FFFFFFFF 两个地址区间。而每个地址区间都有128TB的地址空间可以使用，所以总共是256TB的可用空间。地址空间的划分如下所示\nffffffff`ffffffff _____________ | | | 内核空间 | ffff8000`00000000 |____________| | | | | | 向上增长 | | \/|\\ | 00007fff`ffffffff |______|_____| | | | 用户空间 | 00000000`00000000 |____________|  内存布局 \x26emsp;\x26emsp;在linux中可以通过如命令查看某一进程的内存布局：\ncat \/proc\/\x26lt;pid\x26gt;\/maps pmap \x26lt;pid\x26gt; -X  \x26emsp;\x26emsp;mac查看内存布局参考如何快速读取Mac进程的内存映射\n\x26emsp;\x26emsp;以Linux中的一个JVM进程为例 cat \/proc\/\/map 查看其内存布局：\n00400000-00401000 r-xp 00000000 fd:00 30540205 \/a8root\/work\/soft\/jdk1.8.0_121\/bin\/java 00600000-00601000 rw-p 00000000 fd:00 30540205 \/a8root\/work\/soft\/jdk1.",
+    "inLanguage" : "en-ch",
+    "author" : "木屐帽子",
+    "creator" : "木屐帽子",
+    "publisher": "木屐帽子",
+    "accountablePerson" : "木屐帽子",
+    "copyrightHolder" : "木屐帽子",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-09-16 20:42:36 \x2b0800 CST",
+    "dateModified" : "2019-09-16 20:42:36 \x2b0800 CST",
+    "url" : "https:\/\/wushuangxiaoyu.github.io\/blog\/posts\/process_memory\/",
+    "wordCount" : "238",
+    "keywords" : [ "后台开发", "木屐帽子"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wushuangxiaoyu.github.io/blog/">木屐帽子</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/blog/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/blog/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/blog/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/blog/about/" title="">About</a>
+                
+                <a class="menu-item" href="/blog/about/" title=""></a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wushuangxiaoyu.github.io/blog/">木屐帽子</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/blog/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/blog/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/blog/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/blog/about/" title="">About</a>
+                
+                <a class="menu-item" href="/blog/about/" title=""></a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">进程，线程在内存中的结构</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://wushuangxiaoyu.github.io/blog/" rel="author">木屐帽子</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-09-16 itemprop="datePublished">September 16, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://wushuangxiaoyu.github.io/blog/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h2 id="进程">进程</h2>
+
+<p>&emsp;&emsp;进程是操作系统对一个正在运行的程序的抽象，它是资源分配的最小单位。</p>
+
+<p>&emsp;&emsp;那么进程的内存结构和内存布局是啥样的呢？</p>
+
+<h4 id="虚拟地址">虚拟地址</h4>
+
+<p>&emsp;&emsp;在x86_64下面，其实虚拟地址只使用了48位。所以显示的地址都是只有12位16进制。48位地址长度也就是对应了256TB的地址空间。</p>
+
+<p>&emsp;&emsp;而在Linux下有效的地址区间是从 0x00000000 00000000 ~ 0x00007FFF FFFFFFFF 还有 0xFFFF8000 00000000 ~ 0xFFFFFFFF FFFFFFFF 两个地址区间。而每个地址区间都有128TB的地址空间可以使用，所以总共是256TB的可用空间。地址空间的划分如下所示</p>
+
+<pre><code class="language-HTML">    ffffffff`ffffffff      _____________   
+                          |            |   
+                          |   内核空间  |   
+    ffff8000`00000000     |____________|   
+                          |            |   
+                          |            |   
+                          |   向上增长  |   
+                          |     /|\    |   
+    00007fff`ffffffff     |______|_____|   
+                          |            |   
+                          |   用户空间   |   
+    00000000`00000000     |____________|
+</code></pre>
+
+<h4 id="内存布局">内存布局</h4>
+
+<p>&emsp;&emsp;在linux中可以通过如命令查看某一进程的内存布局：</p>
+
+<pre><code class="language-shell">cat /proc/&lt;pid&gt;/maps
+pmap &lt;pid&gt; -X
+</code></pre>
+
+<p>&emsp;&emsp;mac查看内存布局参考<a href="https://www.4hou.com/technology/10182.html">如何快速读取Mac进程的内存映射</a></p>
+
+<p>&emsp;&emsp;以Linux中的一个JVM进程为例 cat /proc/<pid>/map 查看其内存布局：</p>
+
+<pre><code class="language-HTML">00400000-00401000 r-xp 00000000 fd:00 30540205                           /a8root/work/soft/jdk1.8.0_121/bin/java
+00600000-00601000 rw-p 00000000 fd:00 30540205                           /a8root/work/soft/jdk1.8.0_121/bin/java
+0207c000-0209d000 rw-p 00000000 00:00 0                                  [heap]
+e0000000-100140000 rw-p 00000000 00:00 0
+100140000-140000000 ---p 00000000 00:00 0
+3b2e800000-3b2e820000 r-xp 00000000 fc:01 262190                         /lib64/ld-2.12.so
+3b2ea20000-3b2ea21000 r--p 00020000 fc:01 262190                         /lib64/ld-2.12.so
+3b2ea21000-3b2ea22000 rw-p 00021000 fc:01 262190                         /lib64/ld-2.12.so
+3b2ea22000-3b2ea23000 rw-p 00000000 00:00 0
+...
+7fe194483000-7fe194494000 r-xp 00000000 fd:00 30413178                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnio.so
+7fe194494000-7fe194693000 ---p 00011000 fd:00 30413178                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnio.so
+7fe194693000-7fe194694000 rw-p 00010000 fd:00 30413178                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnio.so
+7fe194694000-7fe19469d000 r-xp 00000000 fd:00 30413156                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libmanagement.so
+7fe19469d000-7fe19489c000 ---p 00009000 fd:00 30413156                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libmanagement.so
+7fe19489c000-7fe19489d000 rw-p 00008000 fd:00 30413156                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libmanagement.so
+7fe19489d000-7fe1948b3000 r-xp 00000000 fd:00 30413167                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnet.so
+7fe1948b3000-7fe194ab3000 ---p 00016000 fd:00 30413167                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnet.so
+7fe194ab3000-7fe194ab4000 rw-p 00016000 fd:00 30413167                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnet.so
+...
+7fe1cca8b000-7fe1d0000000 ---p 00000000 00:00 0
+7ffca8ab1000-7ffca8ac7000 rw-p 00000000 00:00 0                          [stack]
+7ffca8bfa000-7ffca8bfb000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+</code></pre>
+
+<p>&emsp;&emsp;具体的内存布局如图所示：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="/blog/images/blog/process_memory/process_memory.png" alt="image" class="lazyload"><figcaption class="image-caption">image</figcaption></figure></p>
+
+<p>&emsp;&emsp;代码区:程序代码在内存中的映射，存放函数体的二进制代码。</p>
+
+<p>&emsp;&emsp;数据区(Data):在程序运行初已经对变量进行初始化的数据。</p>
+
+<p>&emsp;&emsp;未初始化过的数据(BSS):在程序运行初未对变量进行初始化的数据。</p>
+
+<p>&emsp;&emsp;栈 (Stack):存储局部、临时变量，函数调用时，存储函数的返回指针，用于控制函数的调用和返回。在程序块开始时自动分配内存,结束时自动释放内存。</p>
+
+<p>&emsp;&emsp;堆 (Heap):存储动态内存分配,需要程序自己去new。</p>
+
+<h2 id="线程">线程</h2>
+
+<p>&emsp;&emsp;操作系统引入进程的目的是为了使多个程序并发执行，以便改善资源利用率和提高系统效率，引入线程概念为了减少程序并发执行时所付出的时空开销，使并发粒度更细，并发性更好：</p>
+
+<blockquote>
+<p>Threads were created to make this sort of resource sharing simple and efficient.</p>
+</blockquote>
+
+<h4 id="线程内存分配图">线程内存分配图</h4>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="/blog/images/blog/process_memory/thread.png" alt="image" class="lazyload"><figcaption class="image-caption">image</figcaption></figure></p>
+
+<p>&emsp;&emsp;<strong>在linux下，线程通过clone这个函数创建，而这个函数和fork一样，其实是用来创建进程的，但是clone在创建进程的时候，会指定调用这个函数的进程和新创建的进程之间共享的内容,（<a href="https://www.evanjones.ca/software/threading-linus-msg.html">参见linux本人的邮件</a>）。</strong>而对于线程独有的堆栈的内存,linux  pthreads使用mmap分配内存。</p>
+
+<h4 id="线程是很昂贵的资源">线程是很昂贵的资源</h4>
+
+<ul>
+<li><p>线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。</p></li>
+
+<li><p>线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。</p></li>
+
+<li><p>线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU sy使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。</p></li>
+</ul>
+
+<h2 id="参考文档">参考文档</h2>
+
+<p><a href="https://www.evanjones.ca/software/threading.html#fig3">Implementing a Thread Library on Linux</a></p>
+
+<p><a href="https://blog.csdn.net/Wu_Roc/article/details/77203480">Linux X86_64位虚拟地址空间布局与试验</a></p>
+
+<p><a href="https://stackoverflow.com/questions/796217/what-is-the-difference-between-a-thread-and-a-fiber">What is the difference between a thread and a fiber?</a>]</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>木屐帽子 </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://wushuangxiaoyu.github.io/blog/posts/process_memory/>https://wushuangxiaoyu.github.io/blog/posts/process_memory/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wushuangxiaoyu.github.io/blog/tags/%E5%90%8E%E5%8F%B0%E5%BC%80%E5%8F%91/">
+                    #后台开发</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://wushuangxiaoyu.github.io/blog/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://wushuangxiaoyu.github.io/blog/posts/hmac-sha1/" class="prev" rel="prev" title="HMAC-SHA1接口校验"><i class="iconfont icon-left"></i>&nbsp;HMAC-SHA1接口校验</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2018 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://wushuangxiaoyu.github.io/blog/">木屐帽子</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/blog/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

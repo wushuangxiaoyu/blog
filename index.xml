@@ -5,8 +5,128 @@
     <description>Recent content in 木屐帽子 on 木屐帽子</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-ch</language>
-    <lastBuildDate>Sun, 15 Sep 2019 21:16:25 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Sep 2019 20:42:36 +0800</lastBuildDate>
     <atom:link href="/blog/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>进程，线程在内存中的结构</title>
+      <link>https://wushuangxiaoyu.github.io/blog/posts/process_memory/</link>
+      <pubDate>Mon, 16 Sep 2019 20:42:36 +0800</pubDate>
+      
+      <guid>https://wushuangxiaoyu.github.io/blog/posts/process_memory/</guid>
+      <description>
+
+&lt;h2 id=&#34;进程&#34;&gt;进程&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;进程是操作系统对一个正在运行的程序的抽象，它是资源分配的最小单位。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;那么进程的内存结构和内存布局是啥样的呢？&lt;/p&gt;
+
+&lt;h4 id=&#34;虚拟地址&#34;&gt;虚拟地址&lt;/h4&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;在x86_64下面，其实虚拟地址只使用了48位。所以显示的地址都是只有12位16进制。48位地址长度也就是对应了256TB的地址空间。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;而在Linux下有效的地址区间是从 0x00000000 00000000 ~ 0x00007FFF FFFFFFFF 还有 0xFFFF8000 00000000 ~ 0xFFFFFFFF FFFFFFFF 两个地址区间。而每个地址区间都有128TB的地址空间可以使用，所以总共是256TB的可用空间。地址空间的划分如下所示&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-HTML&#34;&gt;    ffffffff`ffffffff      _____________   
+                          |            |   
+                          |   内核空间  |   
+    ffff8000`00000000     |____________|   
+                          |            |   
+                          |            |   
+                          |   向上增长  |   
+                          |     /|\    |   
+    00007fff`ffffffff     |______|_____|   
+                          |            |   
+                          |   用户空间   |   
+    00000000`00000000     |____________|
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;内存布局&#34;&gt;内存布局&lt;/h4&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;在linux中可以通过如命令查看某一进程的内存布局：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;cat /proc/&amp;lt;pid&amp;gt;/maps
+pmap &amp;lt;pid&amp;gt; -X
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;mac查看内存布局参考&lt;a href=&#34;https://www.4hou.com/technology/10182.html&#34;&gt;如何快速读取Mac进程的内存映射&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;以Linux中的一个JVM进程为例 cat /proc/&lt;pid&gt;/map 查看其内存布局：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-HTML&#34;&gt;00400000-00401000 r-xp 00000000 fd:00 30540205                           /a8root/work/soft/jdk1.8.0_121/bin/java
+00600000-00601000 rw-p 00000000 fd:00 30540205                           /a8root/work/soft/jdk1.8.0_121/bin/java
+0207c000-0209d000 rw-p 00000000 00:00 0                                  [heap]
+e0000000-100140000 rw-p 00000000 00:00 0
+100140000-140000000 ---p 00000000 00:00 0
+3b2e800000-3b2e820000 r-xp 00000000 fc:01 262190                         /lib64/ld-2.12.so
+3b2ea20000-3b2ea21000 r--p 00020000 fc:01 262190                         /lib64/ld-2.12.so
+3b2ea21000-3b2ea22000 rw-p 00021000 fc:01 262190                         /lib64/ld-2.12.so
+3b2ea22000-3b2ea23000 rw-p 00000000 00:00 0
+...
+7fe194483000-7fe194494000 r-xp 00000000 fd:00 30413178                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnio.so
+7fe194494000-7fe194693000 ---p 00011000 fd:00 30413178                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnio.so
+7fe194693000-7fe194694000 rw-p 00010000 fd:00 30413178                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnio.so
+7fe194694000-7fe19469d000 r-xp 00000000 fd:00 30413156                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libmanagement.so
+7fe19469d000-7fe19489c000 ---p 00009000 fd:00 30413156                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libmanagement.so
+7fe19489c000-7fe19489d000 rw-p 00008000 fd:00 30413156                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libmanagement.so
+7fe19489d000-7fe1948b3000 r-xp 00000000 fd:00 30413167                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnet.so
+7fe1948b3000-7fe194ab3000 ---p 00016000 fd:00 30413167                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnet.so
+7fe194ab3000-7fe194ab4000 rw-p 00016000 fd:00 30413167                   /a8root/work/soft/jdk1.8.0_121/jre/lib/amd64/libnet.so
+...
+7fe1cca8b000-7fe1d0000000 ---p 00000000 00:00 0
+7ffca8ab1000-7ffca8ac7000 rw-p 00000000 00:00 0                          [stack]
+7ffca8bfa000-7ffca8bfb000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;具体的内存布局如图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/process_memory/process_memory.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;代码区:程序代码在内存中的映射，存放函数体的二进制代码。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;数据区(Data):在程序运行初已经对变量进行初始化的数据。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;未初始化过的数据(BSS):在程序运行初未对变量进行初始化的数据。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;栈 (Stack):存储局部、临时变量，函数调用时，存储函数的返回指针，用于控制函数的调用和返回。在程序块开始时自动分配内存,结束时自动释放内存。&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;堆 (Heap):存储动态内存分配,需要程序自己去new。&lt;/p&gt;
+
+&lt;h2 id=&#34;线程&#34;&gt;线程&lt;/h2&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;操作系统引入进程的目的是为了使多个程序并发执行，以便改善资源利用率和提高系统效率，引入线程概念为了减少程序并发执行时所付出的时空开销，使并发粒度更细，并发性更好：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Threads were created to make this sort of resource sharing simple and efficient.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&#34;线程内存分配图&#34;&gt;线程内存分配图&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://wushuangxiaoyu.github.io/blog/blog/images/blog/process_memory/thread.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;emsp;&amp;emsp;&lt;strong&gt;在linux下，线程通过clone这个函数创建，而这个函数和fork一样，其实是用来创建进程的，但是clone在创建进程的时候，会指定调用这个函数的进程和新创建的进程之间共享的内容,（&lt;a href=&#34;https://www.evanjones.ca/software/threading-linus-msg.html&#34;&gt;参见linux本人的邮件&lt;/a&gt;）。&lt;/strong&gt;而对于线程独有的堆栈的内存,linux  pthreads使用mmap分配内存。&lt;/p&gt;
+
+&lt;h4 id=&#34;线程是很昂贵的资源&#34;&gt;线程是很昂贵的资源&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU sy使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考文档&#34;&gt;参考文档&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.evanjones.ca/software/threading.html#fig3&#34;&gt;Implementing a Thread Library on Linux&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://blog.csdn.net/Wu_Roc/article/details/77203480&#34;&gt;Linux X86_64位虚拟地址空间布局与试验&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://stackoverflow.com/questions/796217/what-is-the-difference-between-a-thread-and-a-fiber&#34;&gt;What is the difference between a thread and a fiber?&lt;/a&gt;]&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>HMAC-SHA1接口校验</title>
